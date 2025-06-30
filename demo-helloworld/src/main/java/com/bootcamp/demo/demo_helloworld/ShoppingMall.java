@@ -1,4 +1,7 @@
+package com.bootcamp.demo.demo_helloworld;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 // ! reflection
 
@@ -12,13 +15,13 @@ public class ShoppingMall {
   // ! List is same as Array, in Serialization perspective
 
   @Getter
-  public class Cinema {
+  public static class Cinema {
     private String name;
     private String openedDate;
-    private List<Film> releasedFilm;
+    private List<Film> releasedFilms;
 
     @Getter
-    public class Film {
+    public static class Film {
       private String name;
       private String releaseDate;
     }
