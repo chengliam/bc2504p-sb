@@ -11,6 +11,11 @@ import com.bootcamp.demo.demo_calculator.model.Cat;
 
 // ! RESTful API / REST API
 public interface CatOperation {
+
+  // Test Dog Bean
+  @GetMapping(value = "/dog/{x}/{y}")
+  Integer dogSum(@PathVariable Integer x, @PathVariable Integer y);
+
   // ! SQL: insert into
   @PostMapping(value = "/cat")
   boolean addCat(@RequestBody Cat cat);

@@ -3,18 +3,31 @@ package com.bootcamp.demo.demo_calculator.controller.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.bootcamp.demo.demo_calculator.controller.CatOperation;
 import com.bootcamp.demo.demo_calculator.model.Cat;
+import com.bootcamp.demo.demo_calculator.model.Dog;
 import com.bootcamp.demo.demo_calculator.service.CatService;
 
-  // ! (Always) Controller -> Service
-  // ! (Never) Service -> Controller
+// ! (Always) Controller -> Service
+// ! (Never) Service -> Controller
 @Controller
 @ResponseBody
 public class CatController implements CatOperation {
+
+  // ! DI (Dependency Injection)
+  @Autowired // ! The way to ask Spring manager help pick up the bean
+  private CatService catService; // bean
+
   @Autowired
-  private CatService catService; // No object
+  private Dog dog;
+
+  @Override
+  public Integer dogSum(Integer x, Integer y) {
+    return this.dog.sum(x, y);
+  }
+  
 
   @Override
   public boolean addCat(Cat cat) {
@@ -48,5 +61,5 @@ public class CatController implements CatOperation {
   @Override
   public List<Cat> getAllCats() {
     return this.catService.getAllCats();
-  } 
+  }
 }

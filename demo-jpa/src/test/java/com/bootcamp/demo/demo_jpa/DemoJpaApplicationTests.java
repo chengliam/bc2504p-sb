@@ -1,12 +1,13 @@
-package com.bootcamp.demo.demo_calculator;
+package com.bootcamp.demo.demo_jpa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoCalculatorApplicationTests {
+class DemoJpaApplicationTests {
 
-  @Test
-  void contextLoads() {}
+	@Test
+	void contextLoads() {
+	}
 
 }
