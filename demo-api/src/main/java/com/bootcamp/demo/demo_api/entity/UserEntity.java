@@ -1,6 +1,5 @@
-package com.bootcamp.demo.demo_jpa.entity;
+package com.bootcamp.demo.demo_api.entity;
 
-import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,29 +10,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-// JPA + Hibernate -> create table
-
-// ! Entity -> SQL Database (Table) -> Create table xxx (....);
 @Entity
-@Table(name = "staffs")
-@Getter
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Builder
-public class StaffEntity {
-  @Id // Primary Key
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+public class UserEntity {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @Setter
+  private Long jphId;
   private String name;
-
-  @Column(name = "join_date")
-  private LocalDate joinDate;
-
-  private Double salary;
-
+  @Column(name = "user_name")
+  private String username;
   private String email;
+  private String phone;
+  private String website;
 }

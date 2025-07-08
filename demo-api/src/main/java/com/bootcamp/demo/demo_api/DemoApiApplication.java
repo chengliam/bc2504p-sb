@@ -1,13 +1,13 @@
-package com.bootcamp.demo.demo_jpa;
+package com.bootcamp.demo.demo_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoJpaApplication {
+public class DemoApiApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(DemoJpaApplication.class, args);
+    SpringApplication.run(DemoApiApplication.class, args);
   }
 
 }

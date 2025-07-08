@@ -1,10 +1,10 @@
-package com.bootcamp.demo.demo_jpa;
+package com.bootcamp.demo.demo_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoJpaApplicationTests {
+class DemoApiApplicationTests {
 
   @Test
   void contextLoads() {}
