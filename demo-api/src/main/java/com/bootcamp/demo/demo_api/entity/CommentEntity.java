@@ -14,23 +14,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "comments")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class PostEntity {
+public class CommentEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Column(nullable = false)
-  private Long jphPostId;
+  private String name;
   @Column(nullable = false)
-  private String title;
-  @Column(nullable = false)
+  private String email;
+  @Column(nullable = false, length = 500)
   private String body;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false) // FK column name
-  private UserEntity userEntity;
+  @JoinColumn(name = "post_id", nullable = false) // FK column name
+  private PostEntity postEntity;
 }

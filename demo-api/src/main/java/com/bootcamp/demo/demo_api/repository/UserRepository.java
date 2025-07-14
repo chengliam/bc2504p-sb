@@ -8,5 +8,5 @@ import com.bootcamp.demo.demo_api.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
   // JPA Methods
-  Optional<UserEntity> findByJphId(Long jphId);
+  Optional<UserEntity> findByJphUserId(Long jphUserId);
 }
