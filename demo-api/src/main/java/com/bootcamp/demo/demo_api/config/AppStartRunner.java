@@ -19,6 +19,6 @@ public class AppStartRunner implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    this.jpService.getAndSaveUsers();
+    //    this.jpService.getAndSaveUsers();
   }
 }

@@ -8,12 +8,19 @@ import com.bootcamp.demo.demo_api.entity.CommentEntity;
 import com.bootcamp.demo.demo_api.entity.PostEntity;
 import com.bootcamp.demo.demo_api.entity.UserEntity;
 import com.bootcamp.demo.demo_api.model.dto.UserDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 // localhost:8080/user?names=john,peter,vincent
 // "john,peter,vincent"
 // String names -> List<String>
 
 public interface JPOperation {
+
+  // @GetMapping(value = "/product/view")
+
+  // @GetMapping(value = "/login")
+  // @GetMapping(value = "/checkout")
+
   @GetMapping(value = "/jph/users")
   List<UserDTO> getAllJPUsers();
 
@@ -27,5 +34,6 @@ public interface JPOperation {
   List<CommentEntity> getAndSaveComments();
 
   @GetMapping(value = "/jph/posts")
-  List<PostEntity> getPostsByUserId(@RequestParam(value = "uid") Long userId);
+  List<PostEntity> getPostsByUserId(@RequestParam(value = "uid") Long userId)
+      throws JsonProcessingException;
 }

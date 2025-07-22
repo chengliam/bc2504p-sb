@@ -1,5 +1,6 @@
 package com.bootcamp.demo.demo_api.service.impl;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import com.bootcamp.demo.demo_api.entity.PostEntity;
 import com.bootcamp.demo.demo_api.entity.UserEntity;
 import com.bootcamp.demo.demo_api.exception.BusinessException;
 import com.bootcamp.demo.demo_api.exception.SysError;
+import com.bootcamp.demo.demo_api.lib.RedisManager;
 import com.bootcamp.demo.demo_api.lib.Scheme;
 import com.bootcamp.demo.demo_api.mapper.EntityMapper;
 import com.bootcamp.demo.demo_api.model.dto.CommentDTO;
@@ -23,6 +25,7 @@ import com.bootcamp.demo.demo_api.repository.CommentRepository;
 import com.bootcamp.demo.demo_api.repository.PostRepository;
 import com.bootcamp.demo.demo_api.repository.UserRepository;
 import com.bootcamp.demo.demo_api.service.JPService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class JPServiceImpl implements JPService {
@@ -58,6 +61,12 @@ public class JPServiceImpl implements JPService {
   @Autowired
   private EntityMapper entityMapper;
 
+  // ! After Encapsulation, we starts using RedisManager
+  // @Autowired
+  // private RedisTemplate<String, String> redisTemplate;
+  @Autowired
+  private RedisManager redisManager;
+
   @Override
   public List<UserDTO> getUsers() {
     // String url = "https://" + domain + usersEndpoint;
@@ -92,8 +101,8 @@ public class JPServiceImpl implements JPService {
     List<PostEntity> postEntities = this.getPosts().stream() //
         .map(e -> {
           UserEntity userEntity =
-              this.userRepository.findByJphUserId(e.getUserId())
-                  .orElseThrow(() -> new BusinessException(SysError.USER_NOT_FOUND));
+              this.userRepository.findByJphUserId(e.getUserId()).orElseThrow(
+                  () -> new BusinessException(SysError.USER_NOT_FOUND));
           return this.entityMapper.map(e, userEntity);
         }).collect(Collectors.toList());
     return this.postRepository.saveAll(postEntities);
@@ -136,11 +145,42 @@ public class JPServiceImpl implements JPService {
     return Arrays.asList(users);
   }
 
+  // ! read posts by user id
+  // Rewrite this method -> become read-through patterh by redis
+  // localhost:6379
   @Override
-  public List<PostEntity> getPostsByUserId(Long userId) {
-    UserEntity userEntity = this.userRepository.findById(userId) //
-        .orElseThrow(() -> new RuntimeException("User not found."));
-    return this.postRepository.findByUserEntity(userEntity);
+  public List<PostEntity> getPostsByUserId(Long userId)
+      throws JsonProcessingException {
+    // ! Step 1:
+    // Find data from Redis, if found, return result.
+    // String json = this.redisTemplate.opsForValue().get(String.valueOf(userId));
+    
+    PostEntity[] postEntitiesFromRedis = this.redisManager.read(String.valueOf(userId), PostEntity[].class);
+    System.out.println("postEntitiesFromRedis=" + postEntitiesFromRedis);
+    // ! Step 2:
+    // If redis not found, find data from Database
+    List<PostEntity> postEntities = null;
+    if (postEntitiesFromRedis == null) {
+      UserEntity userEntity = this.userRepository.findById(userId) //
+          .orElseThrow(() -> new RuntimeException("User not found."));
+      System.out.println("userEntity=" + userEntity);
+      postEntities = this.postRepository.findByUserEntity(userEntity);
+      // ! Step 3:
+      // Write database result into Redis
+      // convert postEntities to string json
+      // String convertedJson =
+      //     new ObjectMapper().writeValueAsString(postEntities);
+      // this.redisTemplate.opsForValue().set(String.valueOf(userId),
+      //     convertedJson, Duration.ofMinutes(1L));
+      this.redisManager.write(String.valueOf(userId), postEntities, Duration.ofMinutes(1L));
+      // ! Step 4:
+      return postEntities;
+    }
+    // redis Found
+    // Convert JSON to List<PostEntity>
+    // PostEntity[] postEntityArray = new ObjectMapper().readValue(json, PostEntity[].class);
+    // return Arrays.asList(postEntityArray);
+    return Arrays.asList(postEntitiesFromRedis);
   }
 
   @Override
